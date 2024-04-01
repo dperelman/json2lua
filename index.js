@@ -19,7 +19,16 @@ function toLua(obj) {
     }
     if (!lodash.isObject(obj)) {
         if (typeof obj === 'string') {
-            return '"' + obj + '"';
+            if (obj.includes('\n') || obj.includes('\\') || obj.includes('"')) {
+                var i = 0;
+                var end = ']]';
+                do {
+                    end = ']' + '='.repeat(i) + ']';
+                } while (obj.includes(end));
+                return '[' + '='.repeat(i) + '[' + obj + end;
+            } else {
+                return '"' + obj + '"';
+            }
         }
         return obj.toString();
     }
